@@ -1,0 +1,10 @@
+[package]
+name = "globreeks"
+version = "0.1.0"
+edition = "2021"
+license = "Unlicense"
+authors = ["lauren n. liberda <lauren@selfisekai.rocks>"]
+
+[dependencies]
+anyhow = "1.0.75"
+globset = "0.4.13"
