@@ -7,8 +7,8 @@
 //!
 //! see [Globreeks] for the actual implementation.
 
-use anyhow::Result;
-use globset::{Glob, GlobMatcher};
+pub use anyhow::{Error, Result};
+pub use globset::{Candidate, Glob, GlobMatcher};
 
 #[derive(PartialEq, Eq)]
 enum Conclusion {
@@ -33,8 +33,8 @@ impl Pattern {
         Ok(Pattern { glob, negative })
     }
 
-    fn matches(&self, path: &str) -> Conclusion {
-        match (self.glob.is_match(path), self.negative) {
+    fn matches(&self, path: &Candidate) -> Conclusion {
+        match (self.glob.is_match_candidate(path), self.negative) {
             (true, false) => Conclusion::Matches,
             (true, true) => Conclusion::Exclusion,
             (false, _) => Conclusion::NonMatching,
@@ -64,17 +64,25 @@ impl Globreeks {
     }
 
     /// checks whether the supplied path matches the patterns supplied in [Globreeks::new].
-    pub fn evaluate<S>(&self, path: S) -> bool
-    where
-        S: AsRef<str>,
-    {
-        let path = path.as_ref();
+    ///
+    /// if you want to supply &str rather than [Candidate], see: [Globreeks::evaluate].
+    pub fn evaluate_candidate<'a>(&self, path: &Candidate<'a>) -> bool {
         self.patterns
             .iter()
             .map(|pattern| pattern.matches(path))
             .filter(|m| *m != Conclusion::NonMatching)
             .last()
             == Some(Conclusion::Matches)
+    }
+
+    /// checks whether the supplied path matches the patterns supplied in [Globreeks::new].
+    ///
+    /// internally converts the str argument to [Candidate]. also see: [Globreeks::evaluate_candidate].
+    pub fn evaluate<S>(&self, path: S) -> bool
+    where
+        S: AsRef<str>,
+    {
+        self.evaluate_candidate(&Candidate::new(path.as_ref()))
     }
 }
 
