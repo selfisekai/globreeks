@@ -2,6 +2,8 @@
 name = "globreeks"
 version = "0.1.0"
 edition = "2021"
+description = "globset, but order of patterns matters"
+keywords = ["glob", "globset"]
 license = "Unlicense"
 authors = ["lauren n. liberda <lauren@selfisekai.rocks>"]
 
