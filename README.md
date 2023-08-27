@@ -6,4 +6,8 @@ glob order matters here. out of real examples, one can set the globs to `!**/nod
 
 it uses the glob implementation from ripgrep's `globset` (by BurntSushi). yes, it's the crate that holds a similar purpose to this one. however, it also includes the least broken rust implementation of a single glob.
 
+mirrors:
+- https://codeberg.org/selfisekai/globreeks (main)
+- https://github.com/selfisekai/globreeks (backup)
+
 copyright 2023 lauren n. liberda, if you must. usage allowed under the terms of `Unlicense`.
