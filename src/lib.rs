@@ -67,12 +67,14 @@ impl Globreeks {
     ///
     /// if you want to supply &str rather than [Candidate], see: [Globreeks::evaluate].
     pub fn evaluate_candidate<'a>(&self, path: &Candidate<'a>) -> bool {
-        self.patterns
-            .iter()
-            .map(|pattern| pattern.matches(path))
-            .filter(|m| *m != Conclusion::NonMatching)
-            .last()
-            == Some(Conclusion::Matches)
+        for pattern in self.patterns.iter().rev() {
+            match pattern.matches(path) {
+                Conclusion::Matches => return true,
+                Conclusion::Exclusion => return false,
+                Conclusion::NonMatching => continue,
+            }
+        }
+        false
     }
 
     /// checks whether the supplied path matches the patterns supplied in [Globreeks::new].
